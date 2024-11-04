@@ -16,6 +16,8 @@ public class Player extends Entity {
     public boolean moving = false;
     public BufferedImage img;
 
+	public int numberKey = 0;
+
 	public BufferedImage[] rightAni;
 	public BufferedImage[] leftAni;
 	public BufferedImage[] upAni;
@@ -33,19 +35,22 @@ public class Player extends Entity {
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
-        solidArea.width = 48;
-        solidArea.height = 48;
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+        solidArea.width = 30;
+        solidArea.height = 30;
         
-        
+
         setDefaultValues();
         importImg();
         loadAninmations(img);
-;    }
+
+    }
 
     public void setDefaultValues() {
     	EntityWorldX = gp.tileSize * 23;
     	EntityWorldY = gp.tileSize * 21;
-        speed = 4;
+        speed = 3;
         System.out.println(EntityWorldX+ " "+ EntityWorldY);
     }
     public int getDirection() {
@@ -67,6 +72,11 @@ public class Player extends Entity {
             // Kiểm tra vật cản
             collisionON = false;
             gp.collisionChecker.checkTile(this);
+
+			// kiem tra va cham vat the
+			int objindex = gp.collisionChecker.checkObject(this , true);
+			pickUpObject(objindex);
+
             // Nếu kiểm tra vật cản là FALSE, nhân vật có thể di chuyển
             if (collisionON == false) {
             	if (moving) {
@@ -103,7 +113,8 @@ public class Player extends Entity {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}		}
+			}
+		}
 	}
     public void loadRightAni(BufferedImage img) {
 		rightAni = new BufferedImage[10];
@@ -122,13 +133,13 @@ public class Player extends Entity {
 		}
 	}
 	public void loadUpAni(BufferedImage img) {
-		upAni = new BufferedImage[12];
+		upAni = new BufferedImage[11];
 		int index = 0;
 		for (int i = 3; i < 11; i++) {
 			upAni[index] = img.getSubimage(i * 64, 3 * 64, 64, 64);
 			index++;
 		}
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			upAni[index] = img.getSubimage(i * 64, 4 * 64, 64, 64);
 			index++;
 			
@@ -153,6 +164,15 @@ public class Player extends Entity {
 		loadLeftAni(img);
 		loadUpAni(img);
 		loadDownAni(img);
+	}
+
+	public void pickUpObject (int i) {
+		if(i != 999 ) {
+			gp.playSE(1);
+			gp.obj[i] = null;
+			numberKey++;
+			System.out.println(numberKey);
+		}
 	}
     public void draw(Graphics2D g2, BufferedImage subImg) {
         g2.setColor(Color.white);

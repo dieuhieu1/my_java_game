@@ -7,16 +7,22 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
 import object.MainObject;
 
 import static utilz.Constants.Directions.*;
+
+import object.obj_duck;
 import utilz.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
 	private int aniTick, aniIndex, aniSpeed = 20;
+	private int aniTickDuck, aniIndexDuck, aniSpeedDuck = 30;
+
+
 	private int currentDirection = -1; 
 	// 4 animations/ 1s -> speed = 120 / 4 = 30
 	// 1/30s sẽ reset vẽ lại animations
@@ -32,17 +38,25 @@ public class GamePanel extends JPanel implements Runnable {
 	// WORLD SETTINGS
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
-	public final int worldWitdh = tileSize * maxWorldCol;
-	public final int worldHeight = tileSize * maxWorldCol;
+
 	
 	// FPS
 	int FPS = 80;
+
+	//
 	TileManager tileM = new TileManager(this);
 	public CollisionChecker collisionChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this);
+	Sound sound = new Sound();
+	UI ui = new UI(this);
 	public Player player = new Player(this);
 	KeyHandler keyH = new KeyHandler(player);
 	Thread gameThread;
-	public MainObject obj[]	= new MainObject[1];
+	public MainObject obj[]	= new MainObject[4];
+	public obj_duck obj_duck = new obj_duck();
+
+
+
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
@@ -51,6 +65,12 @@ public class GamePanel extends JPanel implements Runnable {
 		// Focus vào cửa sổ trò chơi để có thể bắt các sự kiện nhập từ phím
 		this.setFocusable(true);
 		
+	}
+
+	public void setUpGame () {
+
+		aSetter.setObject();
+		playMusic(0);
 	}
 	
 	public void startGameThread() {
@@ -73,6 +93,7 @@ public class GamePanel extends JPanel implements Runnable {
 		// Nếu gameThread được khởi tạo
 		
 		while(gameThread != null) {
+//			System.out.println(player.EntityWorldX + " " + player.EntityWorldY);
 			currentTime = System.nanoTime();
 			delta += (currentTime - lastTime) / drawInterval;
 			//Phép chia giúp xác định số lượng bước cập nhật logic và vẽ cần thực hiện  
@@ -87,7 +108,7 @@ public class GamePanel extends JPanel implements Runnable {
 				drawCount++;
 			}
 			if (timer >= 1000000000) {
-				System.out.println("FPS: " + drawCount);
+//				System.out.println("FPS: " + drawCount);
 				drawCount = 0;
 				timer = 0;
 			}
@@ -100,23 +121,47 @@ public class GamePanel extends JPanel implements Runnable {
 			aniTick = 0;
 			aniIndex++;
 
-			System.out.println(aniIndex);
+//			System.out.println(aniIndex);
 			if (aniIndex >= ani.length) {
 				aniIndex = 0;
 			}
 		}
 	}
 
+	private void updateAnimationTickDuck(BufferedImage[] ani) {
+		aniTickDuck++;
+		if (aniTickDuck >= aniSpeedDuck) {
+			aniTickDuck = 0;
+			aniIndexDuck++;
+
+			// Đảm bảo aniIndex không vượt quá chỉ số cuối của mảng ani
+			if (aniIndexDuck >= ani.length) {
+				aniIndexDuck = 0;
+			}
+		}
+	}
+
+
 	public void update() {
+
 		player.update();
+
 	}
 	
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
+		//title
 		tileM.draw(g2);
-		
+		//obj
+		for (int i = 0 ; i < obj.length ; i++) {
+			if(obj[i] != null) {
+				updateAnimationTickDuck(obj_duck.duckAni);
+				obj[i].draw (g2, this, obj_duck.duckAni[aniIndexDuck]);
+			}
+		}
+		//player
 		if (player.moving) {
             // Nếu hướng đã thay đổi, reset lại chỉ số hoạt ảnh
             if (player.getDirection() != currentDirection) {
@@ -148,7 +193,27 @@ public class GamePanel extends JPanel implements Runnable {
             player.draw(g2, player.img.getSubimage(0 * 56, 0 * 64, 56, 64));
         }
 
+		// hien thi so vit da nhat
+		ui.draw(g2);
+
+
 	
 		g2.dispose();
 	}
+
+	public void playMusic (int i) {
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+	}
+
+	public void stopMusic (int i) {
+		sound.stop();
+	}
+
+	public void playSE (int i) {
+		sound.setFile(i);
+		sound.play();
+	}
+
 }
