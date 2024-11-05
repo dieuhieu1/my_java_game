@@ -169,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
                 currentDirection = player.getDirection(); // Cập nhật hướng hiện tại
             }
 
-            // Vẽ các hoạt ảnh tương ứng với hướng di chuyển
+            // Vẽ các hoạt ảnh tương ứng với hướng di chuyểnp
             switch (player.getDirection()) {
                 case UP:
                     updateAnimationTick(player.upAni);
