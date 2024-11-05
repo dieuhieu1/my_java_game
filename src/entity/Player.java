@@ -171,6 +171,9 @@ public class Player extends Entity {
 			gp.playSE(1);
 			gp.obj[i] = null;
 			numberKey++;
+			if (numberKey == 4) {
+				gp.ui.gameFinnished = true;
+			}
 			System.out.println(numberKey);
 		}
 	}
