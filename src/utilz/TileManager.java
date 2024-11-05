@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 
-public class TileManager {
+public class  TileManager {
 	public Tile[] tile;
 	GamePanel gp;
 	public int mapTileNum[][];
@@ -97,6 +97,8 @@ public class TileManager {
 			int worldY = worldRow * gp.tileSize;
 			int screenX = worldX - gp.player.EntityWorldX + gp.player.screenX;
 			int screenY = worldY - gp.player.EntityWorldY + gp.player.screenY;
+
+
 			g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 			worldCol++;
 			
