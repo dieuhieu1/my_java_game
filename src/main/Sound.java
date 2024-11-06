@@ -11,7 +11,7 @@ public class Sound {
 
     public Sound () {
 
-        soundURL[0] = getClass().getResource("/sound/BackGroundMusic.wav");
+        soundURL[0] = getClass().getResource("/sound/TileSong.wav");
         soundURL[1] = getClass().getResource("/sound/PickUp.wav");
 
     }

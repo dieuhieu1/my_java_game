@@ -50,11 +50,16 @@ public class GamePanel extends JPanel implements Runnable {
 	Sound sound = new Sound();
 	public UI ui = new UI(this);
 	public Player player = new Player(this);
-	KeyHandler keyH = new KeyHandler(player);
+	KeyHandler keyH = new KeyHandler(player, this);
 	Thread gameThread;
 	public MainObject obj[]	= new MainObject[4];
 	public obj_duck obj_duck = new obj_duck();
+	public CutsceneManager csManager = new CutsceneManager(this);
 
+	public int gameState;
+	public final int titleState = 0;
+	public final int playState = 1;
+	public final int endState = 2;
 
 
 	public GamePanel() {
@@ -71,6 +76,19 @@ public class GamePanel extends JPanel implements Runnable {
 
 		aSetter.setObject();
 		playMusic(0);
+		gameState = titleState;
+	}
+
+	public void resetGame(boolean restart)
+	{
+		stopMusic();
+
+		if(restart == true)
+		{
+			player.setDefaultValues();
+			aSetter.setObject();
+		}
+
 	}
 	
 	public void startGameThread() {
@@ -147,59 +165,76 @@ public class GamePanel extends JPanel implements Runnable {
 		player.update();
 
 	}
+
+//	public void resetGame (boolean restart) {
+//		if (restart == true) {
+//			player.setDefaultValues();
+//			aSetter.setObject();
+//		}
+//	}
 	
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
-		//title
-		tileM.draw(g2);
-		//obj
-		for (int i = 0 ; i < obj.length ; i++) {
-			if(obj[i] != null) {
-				updateAnimationTickDuck(obj_duck.duckAni);
-				obj[i].draw (g2, this, obj_duck.duckAni[aniIndexDuck]);
-			}
+
+		if (gameState == titleState) {
+			ui.draw(g2);
 		}
-		//player
-		if (player.moving) {
-            // Nếu hướng đã thay đổi, reset lại chỉ số hoạt ảnh
-            if (player.getDirection() != currentDirection) {
-                aniIndex = 0;  // Reset lại hoạt ảnh khi đổi hướng
-                currentDirection = player.getDirection(); // Cập nhật hướng hiện tại
-            }
+		else if (gameState == playState) {
+			//title
+			tileM.draw(g2);
+			//obj
+			for (int i = 0 ; i < obj.length ; i++) {
+				if(obj[i] != null) {
+					updateAnimationTickDuck(obj_duck.duckAni);
+					obj[i].draw (g2, this, obj_duck.duckAni[aniIndexDuck]);
+				}
+			}
+			//player
+			if (player.moving) {
+				// Nếu hướng đã thay đổi, reset lại chỉ số hoạt ảnh
+				if (player.getDirection() != currentDirection) {
+					aniIndex = 0;  // Reset lại hoạt ảnh khi đổi hướng
+					currentDirection = player.getDirection(); // Cập nhật hướng hiện tại
+				}
 
-            // Vẽ các hoạt ảnh tương ứng với hướng di chuyểnp
-            switch (player.getDirection()) {
-                case UP:
-                    updateAnimationTick(player.upAni);
-                    player.draw(g2, player.upAni[aniIndex]);
-                    break;
-                case LEFT:
-                    updateAnimationTick(player.leftAni);
-                    player.draw(g2, player.leftAni[aniIndex]);
-                    break;
-                case RIGHT:
-                    updateAnimationTick(player.rightAni);
-                    player.draw(g2, player.rightAni[aniIndex]);
-                    break;
-                case DOWN:
-                    updateAnimationTick(player.downAni);
-                    player.draw(g2, player.downAni[aniIndex]);
-                    break;
-            }
-        } else {
-            // Khi không di chuyển, giữ nguyên khung hình đầu tiên của hoạt ảnh
-            player.draw(g2, player.img.getSubimage(0 * 56, 0 * 64, 56, 64));
-        }
+				// Vẽ các hoạt ảnh tương ứng với hướng di chuyểnp
+				switch (player.getDirection()) {
+					case UP:
+						updateAnimationTick(player.upAni);
+						player.draw(g2, player.upAni[aniIndex]);
+						break;
+					case LEFT:
+						updateAnimationTick(player.leftAni);
+						player.draw(g2, player.leftAni[aniIndex]);
+						break;
+					case RIGHT:
+						updateAnimationTick(player.rightAni);
+						player.draw(g2, player.rightAni[aniIndex]);
+						break;
+					case DOWN:
+						updateAnimationTick(player.downAni);
+						player.draw(g2, player.downAni[aniIndex]);
+						break;
+				}
+			} else {
+				// Khi không di chuyển, giữ nguyên khung hình đầu tiên của hoạt ảnh
+				player.draw(g2, player.img.getSubimage(0 * 56, 0 * 64, 56, 64));
+			}
 
-		// hien thi so vit da nhat
-		ui.draw(g2);
+			// hien thi so vit da nhat
+			ui.draw(g2);
+
+		} else if (gameState == endState) {
+			csManager.draw(g2);
+		}
 
 
-	
 		g2.dispose();
 	}
+
+
 
 	public void playMusic (int i) {
 		sound.setFile(i);
@@ -207,7 +242,7 @@ public class GamePanel extends JPanel implements Runnable {
 		sound.loop();
 	}
 
-	public void stopMusic (int i) {
+	public void stopMusic () {
 		sound.stop();
 	}
 
