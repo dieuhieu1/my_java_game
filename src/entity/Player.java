@@ -173,7 +173,7 @@ public class Player extends Entity {
 			numberKey++;
 			if (numberKey == 1) {
 				gp.gameState = gp.endState;
-
+				numberKey = 0;
 			}
 			System.out.println(numberKey);
 		}
