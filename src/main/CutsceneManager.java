@@ -1,25 +1,17 @@
 package main;
-
-
 import java.awt.*;
-
 public class CutsceneManager {
-
     GamePanel gp;
     Graphics2D g2;
     public int sceneNum;
     public int scenePhase;
-
     int counter = 0;
     float alpha = 0f;
     int y;
     String endCredit;
-
     //Scene Number
     public final int NA = 0;
     public final int ending = 2;
-
-
     public CutsceneManager(GamePanel gp)
     {
         this.gp = gp;
@@ -35,9 +27,7 @@ public class CutsceneManager {
     public void draw(Graphics2D g2)
     {
         this.g2 = g2;
-
         scene_ending();
-
     }
 //    public void scene_skeletonLord()
 //    {
@@ -167,9 +157,7 @@ public class CutsceneManager {
                 alpha = 1f;
             }
 //            alpha = graduallyAlpha(alpha, 0.005f);
-
             drawBlackBackground(alpha);
-
             if(alpha == 1f)
             {
                 alpha = 0;
@@ -185,10 +173,8 @@ public class CutsceneManager {
                 alpha = 1f;
             }
             String text = "Chúc mừng bạn đã hoàn thành trò chơi\n";
-
             drawString(alpha, 38f, 200, text, 70);
-
-            if(counterReached(600) == true)
+            if(counterReached(400) == true)
             {
                 alpha = 0;
                 scenePhase++;
@@ -197,26 +183,24 @@ public class CutsceneManager {
         if(scenePhase == 3)
         {
             drawBlackBackground(1f);
-
             drawString(1f,38f, gp.screenHeight/2, "Duck Collector", 40);
-
-            if(counterReached(480) == true && alpha == 1f)
-            {
-                scenePhase++;
-                alpha = 0;
+            System.out.println(alpha);
+//            if(counterReached(480) == true && alpha == 1f)
+//            {
+//                scenePhase++;
+//                alpha = 0;
+//            }
+            if(counterReached(480) == true) {
+            	scenePhase++;
             }
         }
         if(scenePhase == 4)
         {
             //First Credits
             drawBlackBackground(1f);
-
             alpha = graduallyAlpha(alpha, 0.01f);
-
             y = gp.screenHeight/2;
-
             drawString(alpha, 38f,  y, endCredit, 40);
-
             if(counterReached(240) == true && alpha == 1f)
             {
                 scenePhase++;
@@ -226,7 +210,6 @@ public class CutsceneManager {
         if(scenePhase == 5)
         {
             drawBlackBackground(1f);
-
             //Scrolling the credit
             y--;
             drawString(1f, 38f,  y, endCredit, 40);
@@ -235,15 +218,12 @@ public class CutsceneManager {
                 //Reset
                 sceneNum = NA;
                 scenePhase = 0;
-
                 //Transition to game again
                 gp.gameState = gp.titleState;
                 gp.resetGame(true);
-
             }
         }
     }
-
     public boolean counterReached(int target)
     {
         boolean counterReached = false;
@@ -267,7 +247,6 @@ public class CutsceneManager {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2.setColor(Color.white);
         g2.setFont(g2.getFont().deriveFont(fontSize));
-
         for(String line: text.split("\n"))
         {
             int x = gp.ui.getXforCenteredText(line);

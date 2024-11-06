@@ -39,9 +39,9 @@ public class obj_duck extends MainObject {
 	}
 
 	public void loadAnimation(BufferedImage img) {
-		duckAni = new BufferedImage[3];
+		duckAni = new BufferedImage[6];
 		int index = 0;
-		for (int i = 3; i < 6; i++) {
+		for (int i = 3; i < 9; i++) {
 			duckAni[index] = img.getSubimage(i * 64, 4 * 64, 64, 64);
 			index++;
 		}
