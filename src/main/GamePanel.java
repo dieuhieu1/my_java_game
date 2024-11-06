@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
 	private int aniTick, aniIndex, aniSpeed = 20;
-	private int aniTickDuck, aniIndexDuck, aniSpeedDuck = 30;
+	private int aniTickDuck, aniIndexDuck, aniSpeedDuck = 40;
 
 
 	private int currentDirection = -1; 
@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public Player player = new Player(this);
 	KeyHandler keyH = new KeyHandler(player, this);
 	Thread gameThread;
-	public MainObject obj[]	= new MainObject[4];
+	public MainObject obj[]	= new MainObject[10];
 	public obj_duck obj_duck = new obj_duck();
 	public CutsceneManager csManager = new CutsceneManager(this);
 
@@ -139,7 +139,6 @@ public class GamePanel extends JPanel implements Runnable {
 			aniTick = 0;
 			aniIndex++;
 
-//			System.out.println(aniIndex);
 			if (aniIndex >= ani.length) {
 				aniIndex = 0;
 			}
@@ -166,14 +165,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 	}
 
-//	public void resetGame (boolean restart) {
-//		if (restart == true) {
-//			player.setDefaultValues();
-//			aSetter.setObject();
-//		}
-//	}
-	
-	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;

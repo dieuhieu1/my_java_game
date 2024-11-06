@@ -2,6 +2,8 @@ package main;
 
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CutsceneManager {
 
@@ -9,6 +11,7 @@ public class CutsceneManager {
     Graphics2D g2;
     public int sceneNum;
     public int scenePhase;
+    public Font maruMonica;
 
     int counter = 0;
     float alpha = 0f;
@@ -17,21 +20,31 @@ public class CutsceneManager {
 
     //Scene Number
     public final int NA = 0;
-    public final int ending = 2;
+
 
 
     public CutsceneManager(GamePanel gp)
     {
         this.gp = gp;
-        endCredit =  "----------------\n"
+        try
+        {
+            InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
+            maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (FontFormatException e) {
+            throw new RuntimeException(e);
+        }
+        endCredit = "\n\n\n\n\n\n\n"
+                + "----------------\n"
                 + "Developed by\n"
-                + "Vu Tien Manh B22DCPT163\n"
-                + "Dieu Chinh Hieu B22DCPT\n"
+                + "Vũ Tiến Mạnh B22DCPT163\n"
+                + "Điêu Chính Hiếu B22DCPT087\n"
                 + "----------------"
-                + "\n\n\n\n\n\n\n\n\n\n\n"
-                + "Bai Tap Lon\n\n"
-                + "Mon Hoc : Ngon ngu lap trinh JAVA\n"
-                + "\n\n\n\n\n\n\n"
+                + "\n\n\n\n\n\n"
+                + "Bài Tập Lớn\n\n"
+                + "Môn Học : Ngôn ngữ lập trình JAVA\n"
+                + "\n\n\n\n\n\n"
                 + "Thank you for playing!";
     }
     public void draw(Graphics2D g2)
@@ -41,29 +54,10 @@ public class CutsceneManager {
         scene_ending();
 
     }
-    public void scene_ending()
-    {
-//        if(scenePhase == 0)
-//        {
-//            gp.stopMusic();
-//            gp.ui.npc = new OBJ_BlueHeart(gp);
-//            scenePhase++;
-//        }
-//        if(scenePhase == 1)
-//        {
-//            //Display dialogues
-//            gp.ui.drawDialogueScreen();
-//        }
-//        if(scenePhase == 2)
-//        {
-//            //Play the fanfare
-//            gp.playSE(4);
-//            scenePhase++;
-//        }
+    public void scene_ending() {
         if(scenePhase == 0)
         {
-            //Wait until the sound effect ends
-            if(counterReached(100) == true) // 5 sec delay
+            if(counterReached(100) == true)
             {
                 scenePhase++;
             }
@@ -75,7 +69,6 @@ public class CutsceneManager {
             if (alpha > 1f){
                 alpha = 1f;
             }
-//            alpha = graduallyAlpha(alpha, 0.005f);
 
             drawBlackBackground(alpha);
 
@@ -93,11 +86,12 @@ public class CutsceneManager {
             if (alpha > 1f){
                 alpha = 1f;
             }
-            String text = "Chúc mừng bạn đã hoàn thành trò chơi\n";
+            String text = "Chúc mừng !\n"
+                          +"Bạn đã hoàn thành trò chơi.\n";
 
-            drawString(alpha, 38f, 200, text, 70);
+            drawString(alpha, 45f, gp.screenHeight/2, text, 70);
 
-            if(counterReached(600) == true )
+            if(counterReached(300) == true )
             {
                 alpha = 0;
                 scenePhase++;
@@ -107,9 +101,9 @@ public class CutsceneManager {
         {
             drawBlackBackground(1f);
 
-            drawString(1f,38f, gp.screenHeight/2, "Duck Collector", 40);
+            drawString(1f,45f, gp.screenHeight/2, "Duck Collector", 40);
 
-            if(counterReached(480) == true)
+            if(counterReached(200) == true)
             {
                 scenePhase++;
                 alpha = 0;
@@ -120,16 +114,13 @@ public class CutsceneManager {
             //First Credits
             drawBlackBackground(1f);
 
-//            alpha = graduallyAlpha(alpha, 0.01f);
-
             y = gp.screenHeight/2;
 
-            drawString(alpha, 38f,  y, endCredit, 40);
+            drawString1(alpha, 38f,  y, endCredit, 40);
 
-            if(counterReached(240) == true )
+            if(counterReached(200) == true )
             {
                 scenePhase++;
-//                alpha = 0;
             }
         }
         if(scenePhase == 5)
@@ -138,12 +129,13 @@ public class CutsceneManager {
 
             //Scrolling the credit
             y--;
-            drawString(1f, 38f,  y, endCredit, 40);
-            if(counterReached(1320) == true)
+            drawString1(1f, 38f,  y, endCredit, 40);
+            if(counterReached(1220) == true)
             {
                 //Reset
                 sceneNum = NA;
                 scenePhase = 0;
+                gp.sound.stop();
 
                 //Transition to game again
                 gp.gameState = gp.titleState;
@@ -180,18 +172,23 @@ public class CutsceneManager {
         for(String line: text.split("\n"))
         {
             int x = gp.ui.getXforCenteredText(line);
-            g2.drawString(line, x, y);
+            g2.drawString(line, x-15, y);
             y += lineHeight;
         }
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
-    public float graduallyAlpha(float alpha, float grade)
+    public void drawString1(float alpha, float fontSize, int y, String text, int lineHeight)
     {
-        alpha += grade;  // after 200 frames alpha becomes 1
-        if(alpha > 1f)
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(fontSize));
+
+        for(String line: text.split("\n"))
         {
-            alpha = 1f;
+            int x = gp.ui.getXforCenteredText(line);
+            g2.drawString(line, x, y);
+            y += lineHeight;
         }
-        return alpha;
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 }

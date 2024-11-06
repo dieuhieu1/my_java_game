@@ -27,7 +27,6 @@ public class UI {
         {
             InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
             maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
-            is = getClass().getResourceAsStream("/font/Purisa Bold.ttf");
         }
         catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -54,7 +53,7 @@ public class UI {
             g2.setFont(arial_40);
             g2.setColor(Color.WHITE);
             g2.drawImage(image, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
-            g2.drawString(gp.player.numberKey + "/4", 90, 75);
+            g2.drawString(gp.player.numberKey + "/10", 90, 75);
         }
     }
 
