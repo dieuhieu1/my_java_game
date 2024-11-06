@@ -121,20 +121,41 @@ public class UI {
             g2.setColor(Color.white);
             g2.setFont(arial_40);
 
-            String text = "nhiệm vụ của bạn là tìm kiếm đủ số vịt vàng !";
+            String text = "-----------------\n"
+                          +"Hãy vào vai một nhà thám hiểm.\n"
+                          +"Kho báu đang ở trước mắt bạn \n "
+                          +"hãy thu thập đủ kho báu để trở\n"
+                          + "thành nhà thám hiểm vĩ đại !\n"
+                          + "-----------------\n";
             int x = getXforCenteredText(text);
             int y = gp.tileSize * 3;
-            g2.drawString(text,x,y);
-
+//            g2.drawString(text,x,y);
+            drawString(1f,38f, gp.screenHeight/2 - 100, text, 40);
 
             text = "ENTER";
             x = getXforCenteredText(text);
-            y += gp.tileSize * 2;
+            y += gp.tileSize * 7;
             g2.drawString(text,x,y);
+
             if(commandNum == 0)
             {
                 g2.drawString(">",x-gp.tileSize,y);
             }
         }
+    }
+
+    public void drawString(float alpha, float fontSize, int y, String text, int lineHeight)
+    {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(fontSize));
+
+        for(String line: text.split("\n"))
+        {
+            int x = gp.ui.getXforCenteredText(line);
+            g2.drawString(line, x, y);
+            y += lineHeight;
+        }
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
  }
