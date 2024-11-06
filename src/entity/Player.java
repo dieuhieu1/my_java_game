@@ -171,7 +171,7 @@ public class Player extends Entity {
 			gp.playSE(1);
 			gp.obj[i] = null;
 			numberKey++;
-			if (numberKey == 1) {
+			if (numberKey == 4) {
 				gp.gameState = gp.endState;
 				numberKey = 0;
 			}
