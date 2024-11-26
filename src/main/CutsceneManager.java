@@ -81,7 +81,6 @@ public class CutsceneManager {
         if(scenePhase == 2)
         {
             drawBlackBackground(1f);
-            //alpha = graduallyAlpha(alpha, 0.005f);
             alpha += 0.05f;
             if (alpha > 1f){
                 alpha = 1f;

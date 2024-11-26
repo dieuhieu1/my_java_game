@@ -39,7 +39,7 @@ public class UI {
 
         this.g2 = g2;
         g2.setFont(maruMonica);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);  // Anti Aliasing // Smoothes the text
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setColor(Color.white);
 
         //TITLE STATE
@@ -91,7 +91,6 @@ public class UI {
             g2.drawImage(image,x,y,gp.tileSize*2,gp.tileSize*2,null);
 
             //MENU
-//            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
             g2.setFont(arial_40);
 
             text = "GAME MỚI";
@@ -128,7 +127,6 @@ public class UI {
                           + "-----------------\n";
             int x = getXforCenteredText(text);
             int y = gp.tileSize * 3;
-//            g2.drawString(text,x,y);
             drawString(1f,38f, gp.screenHeight/2 - 100, text, 40);
 
             text = "ENTER";

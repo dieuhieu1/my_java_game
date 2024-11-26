@@ -1,9 +1,7 @@
 package main;
 
-import object.obj_duck;
-
 import javax.swing.*;
-import java.awt.image.BufferedImage;
+
 
 public class Main {
 
